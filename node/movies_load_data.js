@@ -6,6 +6,7 @@ DATA_FILE = '../data/moviedata.json';
 AWS.config.update({
   region: "us-east-1",
   endpoint: "http://127.0.0.1:8000"
+  //endpoint: "https://dynamodb.us-east-1.amazonaws.com"
 });
 
 var docClient = new AWS.DynamoDB.DocumentClient();
