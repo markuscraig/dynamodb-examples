@@ -10,8 +10,8 @@ import (
 )
 
 type Info struct {
-	Plot    string `dynamodbav:"plot"`
-	Ratings int    `dynamodbav:"ratings"`
+	Plot   string  `dynamodbav:"plot"`
+	Rating float64 `dynamodbav:"rating"`
 }
 
 type Item struct {
@@ -36,8 +36,8 @@ func main() {
 		Year:  2015,
 		Title: "The Big New Movie",
 		Info: Info{
-			Plot:    "Nothing happens at all.",
-			Ratings: 0,
+			Plot:   "Nothing happens at all.",
+			Rating: 1.1,
 		},
 	}
 

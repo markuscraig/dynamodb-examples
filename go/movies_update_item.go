@@ -36,8 +36,15 @@ func main() {
 	year := 2015
 	title := "The Big New Movie"
 
+	// update values
+	rating := 4.5
+	plot := "Everything happens ONCE AGAIN all at once."
+	actors := []string{
+		"Larry", "Moe", "Curly",
+	}
+
 	// create the api params
-	params := &dynamodb.GetItemInput{
+	params := &dynamodb.UpdateItemInput{
 		TableName: aws.String("Movies"),
 		Key: map[string]*dynamodb.AttributeValue{
 			"year": {
@@ -47,10 +54,17 @@ func main() {
 				S: aws.String(title),
 			},
 		},
+		UpdateExpression: aws.String("set info.rating=:r, info.plot=:p, info.actors=:a"),
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":r": {N: aws.String(strconv.FormatFloat(rating, 'f', -1, 64))},
+			":p": {S: aws.String(plot)},
+			":a": {SS: aws.StringSlice(actors)},
+		},
+		ReturnValues: aws.String(dynamodb.ReturnValueUpdatedNew),
 	}
 
-	// read the item
-	resp, err := db.GetItem(params)
+	// update the item
+	resp, err := db.UpdateItem(params)
 	if err != nil {
 		fmt.Printf("ERROR: %v\n", err.Error())
 		return
@@ -58,8 +72,8 @@ func main() {
 
 	// unmarshal the dynamodb attribute values into a custom struct
 	var item Item
-	err = dynamodbattribute.UnmarshalMap(resp.Item, &item)
+	err = dynamodbattribute.UnmarshalMap(resp.Attributes, &item)
 
 	// print the response data
-	fmt.Printf("Unmarshaled Item = %+v\n", item)
+	fmt.Printf("Updated Item = %+v\n", item)
 }
