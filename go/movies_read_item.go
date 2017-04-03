@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
 type Info struct {
@@ -55,6 +56,10 @@ func main() {
 		return
 	}
 
+	// unmarshal the dynamodb attribute values into a custom struct
+	var item Item
+	err = dynamodbattribute.UnmarshalMap(resp.Item, &item)
+
 	// print the response data
-	fmt.Println(resp)
+	fmt.Printf("Unmarshaled Item = %+v\n", item)
 }
