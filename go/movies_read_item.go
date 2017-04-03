@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
 type Info struct {
@@ -31,36 +31,30 @@ func main() {
 	// create a dynamodb instance
 	db := dynamodb.New(sess)
 
-	// item data
-	item := Item{
-		Year:  2015,
-		Title: "The Big New Movie",
-		Info: Info{
-			Plot:    "Nothing happens at all.",
-			Ratings: 0,
+	// query parameters
+	year := 2015
+	title := "The Big New Movie"
+
+	// create the api params
+	params := &dynamodb.GetItemInput{
+		TableName: aws.String("Movies"),
+		Key: map[string]*dynamodb.AttributeValue{
+			"year": {
+				N: aws.String(strconv.Itoa(year)),
+			},
+			"title": {
+				S: aws.String(title),
+			},
 		},
 	}
 
-	// marshal the info struct into an aws attribute value
-	itemAVMap, err := dynamodbattribute.MarshalMap(item)
-	if err != nil {
-		panic("Cannot marshal item into AttributeValue map")
-	}
-
-	// create the api params
-	params := &dynamodb.PutItemInput{
-		TableName: aws.String("Movies"),
-		Item:      itemAVMap,
-	}
-
-	// put the item
-	resp, err := db.PutItem(params)
+	// read the item
+	resp, err := db.GetItem(params)
 	if err != nil {
 		fmt.Printf("ERROR: %v\n", err.Error())
 		return
 	}
 
 	// print the response data
-	fmt.Println("Success")
 	fmt.Println(resp)
 }
