@@ -57,3 +57,5 @@ $ node node/movies_update_atomic_counter.js
 $ node node/movies_update_conditionally.js
 $ node node/movies_update_item.js
 ```
+
+Made with :green_heart: in Campbell, CA
