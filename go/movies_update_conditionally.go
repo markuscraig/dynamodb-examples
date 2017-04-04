@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -26,21 +27,8 @@ func main() {
 	year := 2015
 	title := "The Big New Movie"
 
-	// update values
-	rating := 4.5
-	plot := "Everything happens ONCE AGAIN all at once."
-	actors := []string{
-		"Larry", "Moe", "Curly",
-	}
-
-	// Marshal the slice of actor strings into a slice of AWS AttributeValues.
-	// This is needed so that the slice of strings is written as an AWS 'L'
-	// type (list of AttributeValues) rather than as an AWS 'SS' string-set
-	// type. The AWS 'L' attribute
-	actorsAVs, err := dynamodbattribute.MarshalList(actors)
-	if err != nil {
-		panic("Could not convert actors strings to AttributeValues")
-	}
+	// condition parameters
+	minActors := 3
 
 	// create the api params
 	params := &dynamodb.UpdateItemInput{
@@ -53,20 +41,29 @@ func main() {
 				S: aws.String(title),
 			},
 		},
-		UpdateExpression: aws.String("set info.rating=:r, info.plot=:p, info.actors=:a"),
+
+		// NOTE: To remove an item by index, the attribute needs to be
+		// an AWS 'L' (list) type.  The attribute would need to be created
+		// as a slice of AttributeValues using 'dynamodbattribute.MarshalList(actors)'.
+		UpdateExpression:    aws.String("remove info.actors[0]"),
+		ConditionExpression: aws.String("size(info.actors) >= :num"),
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":r": {N: aws.String(strconv.FormatFloat(rating, 'f', -1, 64))},
-			":p": {S: aws.String(plot)},
-			":a": {L: actorsAVs},
-			//":a": {SS: aws.StringSlice(actors)},
+			":num": {
+				N: aws.String(strconv.Itoa(minActors)),
+			},
 		},
 		ReturnValues: aws.String(dynamodb.ReturnValueAllNew),
 	}
 
-	// update the item
+	// update the item conditionally
 	resp, err := db.UpdateItem(params)
 	if err != nil {
-		fmt.Printf("ERROR: %v\n", err.Error())
+		// if the conditional check failed
+		if strings.Contains(err.Error(), "ConditionalCheckFailedException") {
+			fmt.Printf("Conditional check failed; did not update\nerr = %v\n", err)
+		} else {
+			fmt.Printf("ERROR: %v\n", err)
+		}
 		return
 	}
 

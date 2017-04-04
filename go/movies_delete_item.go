@@ -7,8 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/fitquick/dynamodb-examples/go/types"
 )
 
 func main() {
@@ -27,7 +25,7 @@ func main() {
 	title := "The Big New Movie"
 
 	// create the api params
-	params := &dynamodb.GetItemInput{
+	params := &dynamodb.DeleteItemInput{
 		TableName: aws.String("Movies"),
 		Key: map[string]*dynamodb.AttributeValue{
 			"year": {
@@ -39,20 +37,14 @@ func main() {
 		},
 	}
 
-	// read the item
-	resp, err := db.GetItem(params)
+	// delete the item
+	resp, err := db.DeleteItem(params)
 	if err != nil {
 		fmt.Printf("ERROR: %v\n", err.Error())
 		return
 	}
 
-	// dump the response data
-	fmt.Println(resp)
-
-	// unmarshal the dynamodb attribute values into a custom struct
-	var movie types.Movie
-	err = dynamodbattribute.UnmarshalMap(resp.Item, &movie)
-
 	// print the response data
-	fmt.Printf("Unmarshaled Movie = %+v\n", movie)
+	fmt.Println("Success")
+	fmt.Println(resp)
 }

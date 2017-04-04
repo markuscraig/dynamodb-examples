@@ -18,10 +18,12 @@ var params = {
         year: year,
         title: title
     },
+    /*
     ConditionExpression: "info.rating <= :val",
     ExpressionAttributeValues: {
         ":val": 5.0
     }
+    */
 };
 
 console.log("Attempting a conditional delete...");
