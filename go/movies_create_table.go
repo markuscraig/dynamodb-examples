@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	// create a session
+	// create an aws session
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region:   aws.String("us-east-1"),
 		Endpoint: aws.String("http://127.0.0.1:8000"),

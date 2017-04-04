@@ -7,21 +7,11 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/fitquick/dynamodb-examples/go/types"
 )
 
-type Info struct {
-	Plot   string  `dynamodbav:"plot"`
-	Rating float64 `dynamodbav:"rating"`
-}
-
-type Item struct {
-	Year  int    `dynamodbav:"year"`
-	Title string `dynamodbav:"title"`
-	Info  Info   `dynamodbav:"info"`
-}
-
 func main() {
-	// create a session
+	// create an aws session
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region:   aws.String("us-east-1"),
 		Endpoint: aws.String("http://127.0.0.1:8000"),
@@ -31,26 +21,26 @@ func main() {
 	// create a dynamodb instance
 	db := dynamodb.New(sess)
 
-	// item data
-	item := Item{
+	// movie data
+	movie := types.Movie{
 		Year:  2015,
 		Title: "The Big New Movie",
-		Info: Info{
+		Info: types.MovieInfo{
 			Plot:   "Nothing happens at all.",
 			Rating: 1.1,
 		},
 	}
 
-	// marshal the info struct into an aws attribute value
-	itemAVMap, err := dynamodbattribute.MarshalMap(item)
+	// marshal the movie struct into an aws attribute value
+	movieAVMap, err := dynamodbattribute.MarshalMap(movie)
 	if err != nil {
-		panic("Cannot marshal item into AttributeValue map")
+		panic("Cannot marshal movie into AttributeValue map")
 	}
 
 	// create the api params
 	params := &dynamodb.PutItemInput{
 		TableName: aws.String("Movies"),
-		Item:      itemAVMap,
+		Item:      movieAVMap,
 	}
 
 	// put the item

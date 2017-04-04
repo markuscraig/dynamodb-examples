@@ -8,21 +8,11 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/fitquick/dynamodb-examples/go/types"
 )
 
-type Info struct {
-	Plot   string  `dynamodbav:"plot"`
-	Rating float64 `dynamodbav:"rating"`
-}
-
-type Item struct {
-	Year  int    `dynamodbav:"year"`
-	Title string `dynamodbav:"title"`
-	Info  Info   `dynamodbav:"info"`
-}
-
 func main() {
-	// create a session
+	// create an aws session
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region:   aws.String("us-east-1"),
 		Endpoint: aws.String("http://127.0.0.1:8000"),
@@ -71,9 +61,9 @@ func main() {
 	}
 
 	// unmarshal the dynamodb attribute values into a custom struct
-	var item Item
-	err = dynamodbattribute.UnmarshalMap(resp.Attributes, &item)
+	var movie types.Movie
+	err = dynamodbattribute.UnmarshalMap(resp.Attributes, &movie)
 
 	// print the response data
-	fmt.Printf("Updated Item = %+v\n", item)
+	fmt.Printf("Updated Movie = %+v\n", movie)
 }
