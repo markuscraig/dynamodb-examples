@@ -51,6 +51,7 @@ $ node node/movies_delete_table.js
 $ node node/movies_load_data.js
 $ node node/movies_query_year.js
 $ node node/movies_query_year_title.js
+$ node node/movies_query_pages.js
 $ node node/movies_read_item.js
 $ node node/movies_scan.js
 $ node node/movies_update_atomic_counter.js
