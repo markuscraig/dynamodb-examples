@@ -1,4 +1,4 @@
-### Examples of accessing DynamoDB using the AWS SDK
+## Examples of accessing DynamoDB using the AWS SDK
 
 Examples have been written in the following languagues...
 
@@ -7,7 +7,7 @@ Examples have been written in the following languagues...
 2. Golang (coming soon)
    * http://docs.aws.amazon.com/sdk-for-go/api/service/dynamodb/
 
-### Local vs Cloud DynamoDB
+## Local vs Cloud DynamoDB
 
 These examples write to a locally running DynamoDB instance (downloadable from AWS)...
 
@@ -21,9 +21,9 @@ AWS.config.update({
 );
 ```
 
-### Running Examples
+## Running Examples
 
-# Go
+### Go
 
 ```bash
 $ go run go/movies_create_item.go
@@ -41,7 +41,7 @@ $ go run go/movies_update_conditionally.go
 $ go run go/movies_update_item.go
 ```
 
-# Node.js
+### Node.js
 
 ```bash
 $ node node/movies_create_item.js
