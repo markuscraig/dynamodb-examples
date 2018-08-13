@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// read the json data file
-	f, err := ioutil.ReadFile("../data/moviedata.json")
+	f, err := ioutil.ReadFile("./data/moviedata.json")
 	if err != nil {
 		panic("Could not read movie json data file")
 	}
