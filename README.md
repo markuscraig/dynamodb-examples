@@ -26,11 +26,11 @@ AWS.config.update({
 ### Go
 
 ```bash
-$ go run go/movies_create_item.go
 $ go run go/movies_create_table.go
+$ go run go/movies_describe_table.go
+$ go run go/movies_create_item.go
 $ go run go/movies_delete_item.go
 $ go run go/movies_delete_table.go
-$ go run go/movies_describe_table.go
 $ go run go/movies_load_data.go
 $ go run go/movies_query_year.go
 $ go run go/movies_query_year_title.go
